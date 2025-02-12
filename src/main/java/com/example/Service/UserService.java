@@ -7,26 +7,36 @@ import com.example.Entity.RoleType;
 import com.example.Entity.Users;
 import com.example.Repo.RoleRepo;
 import com.example.Repo.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    private final UserRepo userRepo;
-    private final RoleRepo roleRepo;
-    public UserService (UserRepo userRepo, RoleRepo roleRepo){
-        this.userRepo = userRepo;
-        this.roleRepo = roleRepo;
-    }
+
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private RoleRepo roleRepo;
+
+//    private final UserRepo userRepo;
+//    private final RoleRepo roleRepo;
+//
+//    public UserService(UserRepo userRepo, RoleRepo roleRepo) {
+//        this.userRepo = userRepo;
+//        this.roleRepo = roleRepo;
+//    }
 
     public List<Users> getAllUsers() {
         return userRepo.findAll();
     }
-    public UserResponseDTO registerUser(UserRegisterDTO userdto){
+
+    public UserResponseDTO registerUser(UserRegisterDTO userdto) {
         Role role = roleRepo.findByName(RoleType.valueOf(userdto.getRole().toUpperCase())).orElseThrow(() -> new RuntimeException("user not found"));
         Users user = new Users();
         user.setUsername(userdto.getUsername());
@@ -49,5 +59,26 @@ public class UserService {
         res.setRole(user.getRoles().iterator().next().getName().name());
         res.setId(user.getId());
         return res;
+    }
+
+    public UserResponseDTO updateUser(long id, UserRegisterDTO user) {
+
+        Users users = userRepo.findById(id).orElseThrow(() -> new RuntimeException("user with id " + id + " not found call from userService "));
+        users.setUsername(user.getUsername());
+        userRepo.save(users);
+        UserResponseDTO res = new UserResponseDTO();
+        res.setUsername(user.getUsername());
+        res.setRole(user.getRole());
+        res.setId(users.getId());
+        return res;
+    }
+
+//    public List<UserResponseDTO> getByRoleName(String rolename) {
+//        return userRepo.findUserByRoles(rolename).stream().map(UserResponseDTO::new).collect(Collectors.toList());
+//    }
+
+    public String delete(long id) {
+        userRepo.deleteById(id);
+        return "user deleted successfully";
     }
 }

@@ -14,7 +14,6 @@ public class RoleSeeder implements CommandLineRunner {
 
     private final RoleRepo roleRepo;
 
-    @Autowired
     public RoleSeeder(RoleRepo roleRepo){
         this.roleRepo = roleRepo;
     }

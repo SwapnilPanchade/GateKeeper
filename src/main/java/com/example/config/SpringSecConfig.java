@@ -30,7 +30,7 @@ public class SpringSecConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())  // Disable CSRF (needed for Postman)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login").permitAll() // Public
+                        .requestMatchers("/api/user/register", "/api/user/login").permitAll() // Public
                         .requestMatchers("/api/users/getAllUsers", "/api/roles/**").hasRole("ADMIN") // Admin-only
                         .requestMatchers("/api/users/{id}").hasAnyRole("ADMIN", "MANAGER") // Admin & Manager
                         .requestMatchers("/api/users/godmode").authenticated() // Authenticated users

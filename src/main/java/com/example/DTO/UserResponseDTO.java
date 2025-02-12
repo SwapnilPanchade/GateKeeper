@@ -14,6 +14,10 @@ public class UserResponseDTO {
         this.role = role;
     }
 
+    public UserResponseDTO(UserResponseDTO userResponseDTO) {
+
+    }
+
     public long getId() {
         return id;
     }
