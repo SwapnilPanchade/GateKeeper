@@ -10,6 +10,7 @@ import com.example.Repo.UserRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -39,5 +40,14 @@ public class UserService {
         response.setUsername(user.getUsername());
         response.setRole(userdto.getRole());
         return response;
+    }
+
+    public UserResponseDTO getUserById(long id) {
+        Users user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("user does not exists"));
+        UserResponseDTO res = new UserResponseDTO();
+        res.setUsername(user.getUsername());
+        res.setRole(user.getRoles().iterator().next().getName().name());
+        res.setId(user.getId());
+        return res;
     }
 }

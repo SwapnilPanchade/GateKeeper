@@ -30,4 +30,9 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegisterDTO user){
         return ResponseEntity.ok(userService.registerUser(user));
     }
+
+    @GetMapping("/{id}")
+    public UserResponseDTO getUserById(@PathVariable long id){
+        return userService.getUserById(id);
+    }
 }
