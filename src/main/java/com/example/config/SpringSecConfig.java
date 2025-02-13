@@ -12,13 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecConfig {
 
-    @Autowired
+//    @Autowired
     private MyUserDetailsService userDetailsService;
 
     public SpringSecConfig(MyUserDetailsService userDetailsService) {
@@ -31,7 +32,7 @@ public class SpringSecConfig {
                 .csrf(csrf -> csrf.disable())  // Disable CSRF (needed for Postman)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/user/register", "/api/user/login").permitAll() // Public
-                        .requestMatchers("/api/users/getAllUsers", "/api/roles/**").hasRole("ADMIN") // Admin-only
+                        .requestMatchers("/api/user/getAllUsers", "/api/roles/**").hasRole("ADMIN") // Admin-only
                         .requestMatchers("/api/users/{id}").hasAnyRole("ADMIN", "MANAGER") // Admin & Manager
                         .requestMatchers("/api/users/godmode").authenticated() // Authenticated users
                         .anyRequest().authenticated() // Everything else requires authentication
@@ -48,5 +49,10 @@ public class SpringSecConfig {
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
         provider.setUserDetailsService(userDetailsService);
         return provider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }

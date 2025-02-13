@@ -8,6 +8,7 @@ import com.example.Entity.Users;
 import com.example.Repo.RoleRepo;
 import com.example.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    @Autowired
+    private    PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepo userRepo;
@@ -33,14 +36,17 @@ public class UserService {
 //    }
 
     public List<Users> getAllUsers() {
-        return userRepo.findAll();
+
+        List<Users> all = userRepo.findAll();
+        System.err.println(all);
+        return all;
     }
 
     public UserResponseDTO registerUser(UserRegisterDTO userdto) {
         Role role = roleRepo.findByName(RoleType.valueOf(userdto.getRole().toUpperCase())).orElseThrow(() -> new RuntimeException("user not found"));
         Users user = new Users();
         user.setUsername(userdto.getUsername());
-        user.setPassword(userdto.getPassword());
+        user.setPassword(passwordEncoder.encode(userdto.getPassword()));
         user.setRoles(Set.of(role));
 
         userRepo.save(user);

@@ -14,7 +14,7 @@ public class RoleSeeder implements CommandLineRunner {
 
     private final RoleRepo roleRepo;
 
-    public RoleSeeder(RoleRepo roleRepo){
+    public RoleSeeder(RoleRepo roleRepo) {
         this.roleRepo = roleRepo;
     }
 
